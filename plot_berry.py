@@ -1,4 +1,4 @@
-## Main function
+## Plotting the BZ map of Berry curvature in the ALM.
 
 from math import *
 import numpy as np
@@ -28,20 +28,17 @@ ltype='ho'
 Nbl=[4,4,1]
 rs,Nr=ltc.ltcsites(ltype,Nbl)
 bc=1
-#filet='../../data/lattice/checkerboard/16161_bc_1'
-filet='../../data/lattice/honeycomb/18181_bc_1'
-NB,RD,RDV=ltc.ltcpairdist(ltype,rs,Nbl,bc,toread=False,filet=filet)
+NB,RD,RDV=ltc.ltcpairdist(ltype,rs,Nbl,bc,toread=False)
 # Flavor and state.
 Nfl=2
 Nrfl=[Nr,Nfl]
 Nst=tb.statenum(Nrfl)
 # Filling fraction of each state.
 nf=(1./2.)
-tobdg=False
 
 # Setup of density matrix.
 Ptype='copy'
-filet='../../data/test/test00'
+filet='almslc/honeycomb/t2_01_phi2_pi2_csgns_1n11_u0_40_18_18_1'
 nbcpmax=2
 Nbli=[18,18,1]
 P=dm.setdenmat(Ptype,Nrfl,nf,fileti=filet,ltype=ltype,rs=rs,Nbl=Nbl,NB=NB,nbcpmax=nbcpmax,Nbli=Nbli)
@@ -51,9 +48,7 @@ t1=1.
 t2=0.1
 phi2=pi/2.
 tocsgns=True
-#csgns=[1,1] # ch
-csgns=[1,1,1] # ho, bcc
-#csgns=[1,1,-1,1,-1,1] # ch3d, dia
+csgns=[1,-1,1] # ho, bcc
 ts=slcham.slcurrent(t1,t2,phi2,ltype,NB,RDV,rs,Nfl,tocsgns=tocsgns,csgns=csgns)
 H0=tb.tbham(ts,NB,Nfl,rs)
 # Interaction
@@ -67,17 +62,16 @@ prds=[1,1,1]
 rucs,RUCRP=bdth.ftsites(ltype,rs,prds)
 
 # Get the momentum-space Hamiltonian.
-Hk=lambda k:bdth.ftham(k,H,Nrfl,RDV,rucs,RUCRP,tobdg=tobdg)
+Hk=lambda k:bdth.ftham(k,H,Nrfl,RDV,rucs,RUCRP)
 
 Nk=120
 
 bzop=False
 ks,dks=bz.listbz(ltype,prds,Nk,bzop)
 
-#'''
 todata=True
 nbd,tonbd=0,False
-dBfBfs=[bdth.berrycurv(k,Hk,dks,nf,tonbd=tonbd,nbd=nbd,tobdg=tobdg) for k in ks]
+dBfBfs=[bdth.berrycurv(k,Hk,dks,nf,tonbd=tonbd,nbd=nbd) for k in ks]
 dBfs=[dBfBf[0] for dBfBf in dBfBfs]
 Bfs=[dBfBf[1] for dBfBf in dBfBfs]
 Ch=(1./(2*pi))*sum(dBfs)
@@ -87,15 +81,8 @@ dka=dBfBfs[0][2]
 bzvol=len(ks)*dka
 print('BZ volume = ',bzvol)
 print('max(Bfs)=',np.max(np.array(Bfs)))
-#for ndat in range(len(data)):
-#    if(abs(data[ndat])>1):data[ndat]=np.sign(data[ndat])*0
-'''
-todata=False
-bzvol=0
-data=[]
-'''
 
-filetfig='../../figs/hartreefock/testbz.pdf'
+filetfig='figs/fig_berry.pdf'
 tosave=True
 tolabel=False
 cmapt='PuOr'

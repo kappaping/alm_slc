@@ -1,4 +1,4 @@
-## Main function
+## Hartree-Fock computation of ground state.
 
 from math import *
 import numpy as np
@@ -20,36 +20,29 @@ import slcham
 
 # Lattice structure.
 ltype='ch'
-Nbl=[16,16,1]
+Nbl=[4,4,1]
 rs,Nr=ltc.ltcsites(ltype,Nbl)
 bc=1
-filet='../../data/lattice/checkerboard/16161_bc_1'
-#filet='../../data/lattice/honeycomb/18181_bc_1'
-#filet='../../data/lattice/bcc0/888_bc_1'
-#filet='../../data/lattice/checkerboard3d/888_bc_1'
-#filet='../../data/lattice/diamond/888_bc_1'
-NB,RD,RDV=ltc.ltcpairdist(ltype,rs,Nbl,bc,toread=True,filet=filet)
+# Lattice generation can be slow. You may want to run cmtkit/lattice/main.py to generate the lattice file for repeated use.
+# To read the saved lattice, set filet to the path of the lattice file then use toread=True to read it.
+filet = ""
+NB,RD,RDV=ltc.ltcpairdist(ltype,rs,Nbl,bc,toread=False,filet=filet)
 # Flavor and state.
 Nfl=2
 Nrfl=[Nr,Nfl]
 Nst=tb.statenum(Nrfl)
 # Filling fraction of each state.
 nf=(1./2.)
-# Whether to adopt the Bogoliubov-de Gennes form.
-tobdg=False
 
 sys.stdout.flush()
 
 # File name for writing out the density matrix.
-filet='../../data/test/test00'
+filet='data/denmat'
 
-# Setup of initial density matrix.
+# Setup of initial density matrix. Ptype="rand" means start from a random density matrix. Ptype="read" reads from a file.
 Ptype='rand'
-#fileti='../../data/test/test00'
-toptb=False
-toflrot=False
-Pi=dm.setdenmat(Ptype,Nrfl,nf,tobdg=tobdg,fileti=fileti,toptb=toptb,toflrot=toflrot,ltype=ltype,rs=rs,Nbl=Nbl,NB=NB,RDV=RDV,Nbli=[12,12,1])
-Pi=Pi.conj()
+fileti='data/denmat'
+Pi=dm.setdenmat(Ptype,Nrfl,nf,fileti=fileti)
 
 sys.stdout.flush()
 
@@ -66,8 +59,6 @@ H0=tb.tbham(ts,NB,Nfl,rs)
 # Interaction.
 us=[4.]
 UINT=itn.interaction(NB,Nrfl,us)
-# Chemical potential
-mu=hf.getchempot(H0,Pi,UINT,nf,Nst,tobdg=tobdg,dnf0=1./Nst**2,toprint=True,toread=False,filet=fileti)
 
 sys.stdout.flush()
 
@@ -79,6 +70,6 @@ writedm=40
 Nhf=1000000
 Nhfm=10
 
-Pf=hf.hartreefock(Pi,H0,UINT,NB,Nrfl,nf,tofile=tofile,filet=filet,optm=optm,printdm=printdm,writedm=writedm,Nhf=Nhf,Ptype=Ptype,tobdg=tobdg,mu=mu)
+Pf=hf.hartreefock(Pi,H0,UINT,NB,Nrfl,nf,tofile=tofile,filet=filet,optm=optm,printdm=printdm,writedm=writedm,Nhf=Nhf,Ptype=Ptype)
 
 

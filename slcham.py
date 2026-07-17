@@ -1,6 +1,4 @@
-## Tight-binding square module
-
-'''Tight-binding square module: Setup of tight-binding models on the square lattice'''
+## Sublattice-current model.
 
 from math import *
 import numpy as np
@@ -16,13 +14,10 @@ import tightbinding as tb
 
 def slcurrent(t1,t2,phi2,ltype,NB,RDV,rs,Nfl,tocsgns=False,csgns=[]):
     '''
-    Cherckerboard-lattice model: Realization of trivial and Chern insulators.
-    H = sum_<ij> c_i^dagger ( -t*sigmaz + i*lda*(sigma.d_{ij}) ) c_j + sum_i c_i^dagger ( m*sigmaz ) c_i
-    2-flavor fermions: c=[c_1,c_2]
-    t: Flavor-dependent hopping
-    lda: Spin-obit-type flavor-exchange hopping with displacement d_{ij}=r_i-r_j
-    m: Flavor-dependent effective mass
-    For t=lda=1: Trivial if m>4 or m<-4; chern if -4<m<0 and 0<m<4; Semimetallic if m=-4,0,4
+    Sublattice-current model:
+    t1: 1st-neighbor hopping
+    t2: 2nd-neighbor hopping amplitude
+    phi2: 2nd-neighbor hopping phase
     '''
     print('Sublattice-current model: [t1,t2,phi2] =',[t1,t2,phi2],'current directions =',csgns)
     # Construct the functions for the hoppings.

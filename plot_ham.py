@@ -1,4 +1,4 @@
-## Main function
+## Plotting the structure of the Hamiltonian on the lattice.
 
 from math import *
 import numpy as np
@@ -21,9 +21,7 @@ ltype='ch'
 Nbl=[4,4,1]
 rs,Nr=ltc.ltcsites(ltype,Nbl)
 bc=1
-#filet='../../data/lattice/checkerboard/16161_bc_1'
-filet='../../data/lattice/checkerboard3d/888_bc_1'
-NB,RD,RDV=ltc.ltcpairdist(ltype,rs,Nbl,bc,toread=False,filet=filet)
+NB,RD,RDV=ltc.ltcpairdist(ltype,rs,Nbl,bc,toread=False)
 # Flavor and state.
 Nfl=2
 Nrfl=[Nr,Nfl]
@@ -42,7 +40,7 @@ csgns=[1,1] # ch
 ts=slcham.slcurrent(t1,t2,phi2,ltype,NB,RDV,rs,Nfl,tocsgns=tocsgns,csgns=csgns)
 H0=tb.tbham(ts,NB,Nfl,rs).conj()
 
-# Plot the orders.
+# Plot the Hamiltonian. Select the setup based on the lattice.
 rpls=[]
 #rpls=[[[n0,n1,n2],sl] for n0 in [0] for n1 in [0] for n2 in [0] for sl in range(ltc.slnum(ltype))]
 #rpls=[[[n0,n1,0],sl] for n0 in range(2) for n1 in range(2) for sl in range(ltc.slnum(ltype))]
@@ -59,11 +57,11 @@ Nnb=2
 #res=10
 res=50
 show3d=False
-plaz,plel,dist=0.,0.,None
+plaz,plel,dist=0.,0.,None # 2D
 #plaz,plel,dist=235.,80.,8. # bcc
 #plaz,plel,dist=285.,75.,8. # ch3d
 #plaz,plel,dist=260.,70.,8. # dia
-filetfig='/home/kappaping/research/figs/hartreefock/testfigh.pdf'
+filetfig='figs/fig_ham.pdf'
 
 # Find out the n-th neighbor pairs.
 nbidss=[ltc.nthneighbors(nnb,NB) for nnb in range(Nnb+1)]
