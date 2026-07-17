@@ -3,5 +3,5 @@ This repository stores the computation and analysis codes used for the research 
 1. Clone this repo.
 2. Download the [dataset](https://doi.org/10.34810/DATA3497) and put it into the repo directory.
 3. Clone the [CMTKit](https://github.com/kappaping/cmtkit) repo under the same parent directory as this repo. Install the dependencies.
-4. Create figs/ and data/ directories.
+4. Create figs/ and data/ child directories within this repo directory.
 5. Ready for use.
